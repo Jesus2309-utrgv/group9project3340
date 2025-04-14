@@ -1,0 +1,23 @@
+<h1>Budgets</h1>
+
+<% @budgets.each do |budget| %>
+  <h3><%= budget.category %> Budget</h3>
+  <p>Budgeted: <%= number_to_currency(budget.amount) %></p>
+
+  <% spent = Transaction.where(category: budget.category).sum(:amount) %>
+  <p>Spent: <%= number_to_currency(spent) %></p>
+
+  <% remaining = budget.amount - spent %>
+  <p style="color: <%= remaining < 0 ? 'red' : 'green' %>;">
+    Remaining: <%= number_to_currency(remaining) %>
+  </p>
+
+  <% if remaining < 0 %>
+    <p style="color: red;">⚠ You’ve exceeded this budget!</p>
+  <% elsif remaining < 20 %>
+    <p style="color: orange;">⚠ Less than $20 left in this budget.</p>
+  <% end %>
+<%= link_to "Back to Transactions", transactions_path, class: "btn btn-secondary" %>
+
+  <hr>
+<% end %>

@@ -83,8 +83,8 @@ Given I have an existing transaction
     And I click "Apply Filter"
     Then I should only see transactions with the type "Expense"
 
-    Scenario: User searches for a transaction by keyword
-    Given I am on the transactions page
-    When I enter "rent" in the search bar
-    And I click "Search"
-    Then I should only see transactions with "rent" in the description
+    Scenario: Set a monthly budget limit for a category
+    Given I am a user
+    When I set a budget of $200 for the "Groceries" category
+    And I add a $50 grocery transaction
+    Then the app should show $150 remaining for "Groceries"
