@@ -2,6 +2,14 @@
 
 <p>Total Available Funds: <%= number_to_currency(@total_balance) %></p>
 
+<%= form_with url: transactions_path, method: :get, local: true do %>
+  <label>Filter by Type:</label>
+  <%= select_tag :filter, options_for_select(['All', 'income', 'expense', 'withdrawal', 'saving'], params[:filter]), include_blank: true %>
+  <%= submit_tag "Apply Filter" %>
+<% end %>
+
+
+
 <table>
   <thead>
     <tr>
@@ -18,7 +26,9 @@
       <tr>
         <td><%= transaction.transaction_date %></td>
         <td><%= transaction.description %></td>
-        <td><%= number_to_currency(transaction.amount) %></td>
+<%# number_to_currency(transaction.amount) %>
+ <td style="color: <%= %w[withdrawal expense].include?(transaction.transaction_type) ? 'red' : 'black' %>;">
+  <%= number_to_currency(transaction.amount) %> </td>
         <td><%= transaction.transaction_type %></td>
         <td><%= transaction.category || 'N/A' %></td>
         <td>

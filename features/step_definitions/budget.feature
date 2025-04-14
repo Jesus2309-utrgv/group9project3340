@@ -68,3 +68,23 @@ Given I want to see my financial status at a glance,
 When I open the dashboard,
 Then I should see a summary of my income, expenses, and remaining balance,
 And I should be able to navigate easily.
+
+Given I have an existing transaction
+    When I click the delete button on the transaction's detail page
+    And I click the "Edit" button
+    And I update the amount and description
+    And I click "Update Transaction"
+    Then I should see a confirmation message
+    And the transaction details should reflect the updated information
+
+    Scenario: User filters transactions to show only expenses
+    Given I am on the transactions page
+    When I select "Expense" from the filter dropdown
+    And I click "Apply Filter"
+    Then I should only see transactions with the type "Expense"
+
+    Scenario: User searches for a transaction by keyword
+    Given I am on the transactions page
+    When I enter "rent" in the search bar
+    And I click "Search"
+    Then I should only see transactions with "rent" in the description

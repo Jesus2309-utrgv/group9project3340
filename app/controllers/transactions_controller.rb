@@ -4,9 +4,16 @@ class TransactionsController < ApplicationController
   before_action :set_transaction, only: [:edit, :update, :destroy]
 
   def index
-    @transactions = Transaction.order(transaction_date: :desc)
+    if params[:filter].present? && params[:filter] != "All"
+      @transactions = Transaction.where(transaction_type: params[:filter])
+    else
+      @transactions = Transaction.all
+    end
+  
+    @transactions = @transactions.order(transaction_date: :desc)
     @total_balance = Transaction.total_balance
-  end
+     end
+  
 
   def new
     @transaction = Transaction.new
@@ -22,20 +29,32 @@ class TransactionsController < ApplicationController
   end
 
   def edit
+    # @transaction is set using before_action :set_transaction
   end
-
+  
   def update
     if @transaction.update(transaction_params)
-      redirect_to transactions_path, notice: "Transaction was successfully updated."
+      redirect_to transaction_path(@transaction), notice: "Transaction was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
   end
+  
 
-  def destroy
-    @transaction.destroy
+  # destroy
+   # @transaction.destroy
+   # redirect_to transactions_path, notice: "Transaction was successfully deleted."
+ # end
+ def destroy
+  if @transaction.destroy
     redirect_to transactions_path, notice: "Transaction was successfully deleted."
+  else
+    redirect_to transactions_path, alert: "Transaction could not be deleted."
   end
+end
+def show
+  @transaction = Transaction.find(params[:id])
+end
 
   private
 
